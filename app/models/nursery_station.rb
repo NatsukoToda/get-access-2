@@ -1,0 +1,2 @@
+class NurseryStation < ApplicationRecord
+end
