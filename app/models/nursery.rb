@@ -1,0 +1,2 @@
+class Nursery < ApplicationRecord
+end

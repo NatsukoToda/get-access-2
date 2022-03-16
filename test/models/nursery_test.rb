@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class NurseriesTest < ActiveSupport::TestCase
+class NurseryTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end
