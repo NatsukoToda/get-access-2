@@ -7,6 +7,7 @@ class CreateNurseries < ActiveRecord::Migration[5.2]
       t.text      :address, null: false, comment: "住所"
       t.decimal   :latitude, precision: 11, scale: 8, comment: "経度"
       t.decimal   :longitude, precision: 11, scale: 8, comment: "緯度"
+      t.integer   :done, comment: "最寄駅付与が完了したら立てるフラグ"
       t.timestamps         
     end
   end

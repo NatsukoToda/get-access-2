@@ -11,6 +11,7 @@ class CreateTempStationGroupsOrderByDistances < ActiveRecord::Migration[5.2]
       t.decimal   :station_latitude, precision: 11, scale: 8, comment: "駅経度"
       t.decimal   :station_longitude, precision: 11, scale: 8, comment: "駅緯度"       
       t.decimal   :distance, precision: 11, scale: 2, comment: "最寄駅からの距離（km）_geocoder"
+      t.integer   :distance_rank, comment: "保育園から距離が近い順_geocoder"
       t.timestamps   
     end
   end

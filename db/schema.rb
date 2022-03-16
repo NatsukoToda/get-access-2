@@ -19,11 +19,12 @@ ActiveRecord::Schema.define(version: 2022_03_15_123321) do
     t.text "address", null: false, comment: "住所"
     t.decimal "latitude", precision: 11, scale: 8, comment: "経度"
     t.decimal "longitude", precision: 11, scale: 8, comment: "緯度"
+    t.integer "done", comment: "最寄駅付与が完了したら立てるフラグ"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "nursery_stations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "nursery_stations", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "nursery_no", null: false, comment: "保育園no"
     t.string "nursery_name", null: false, comment: "保育園名"
     t.string "nursery_name_without_space", null: false, comment: "データ一致確認用の保育園名（全角半角化・スペース除外）"
@@ -34,8 +35,8 @@ ActiveRecord::Schema.define(version: 2022_03_15_123321) do
     t.string "station_group_name", comment: "最寄駅グループ名"
     t.decimal "distance", precision: 11, scale: 2, comment: "最寄駅からの距離（km）_geocoder"
     t.integer "distance_rank", comment: "保育園から距離が近い順_geocoder"
-    t.integer "walking_time", comment: "最寄駅からの徒歩時間（時分）_gmap_api"
-    t.integer "walking_time_hour", comment: "最寄駅からの徒歩時間（分）_gmap_api"
+    t.text "walking_time_text", null: false, comment: "最寄駅からの徒歩時間_gmap_api"
+    t.integer "walking_time", comment: "最寄駅からの徒歩時間（分）_gmap_api"
     t.decimal "nursery_latitude", precision: 11, scale: 8, comment: "経度"
     t.decimal "nursery_longitude", precision: 11, scale: 8, comment: "緯度"
     t.datetime "created_at", null: false
@@ -70,6 +71,7 @@ ActiveRecord::Schema.define(version: 2022_03_15_123321) do
     t.decimal "station_latitude", precision: 11, scale: 8, comment: "駅経度"
     t.decimal "station_longitude", precision: 11, scale: 8, comment: "駅緯度"
     t.decimal "distance", precision: 11, scale: 2, comment: "最寄駅からの距離（km）_geocoder"
+    t.integer "distance_rank", comment: "保育園から距離が近い順_geocoder"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
