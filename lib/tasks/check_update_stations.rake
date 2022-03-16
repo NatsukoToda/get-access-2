@@ -7,9 +7,8 @@ namespace :check_update_stations do
   # 作業手順
   # ①最新の駅情報をstations.csvに上書き
   # ②過去に最寄駅付与済の保育園情報をnurseries_to_check_aceess.csvの名称で保存
-  # ③このrake taskを実行
+  # ③このrake taskを実行（＄ rake check_update_stations:check_update_stations）
   # ④TempStationGroupsOrderByDistanceと現在利用中のnursery_stationでnursery_no＋distance_rankに紐づく駅とその距離に差分があるものを抽出し、get-accessのrake taskを実施
-  
   # タスク名 => check_update_stations
   task check_update_stations: :environment do
    # 一時的に生成する保育園住所と全駅・全駅グループとの距離テーブルと配列をリセット
