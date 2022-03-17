@@ -17,7 +17,7 @@ namespace :get_access do
   # ①最寄駅付与対象の保育園情報インポート
     # 今回最寄駅を付与したい保育園データをアップロード
     unless Nursery.exists?
-      CSV.foreach('db/nurseries_without_aceess.csv') do |row|
+      CSV.foreach('db/nurseries_without_acceess.csv') do |row|
         Nursery.create!(
         :nursery_no => row[0],
         :nursery_name => row[1],
