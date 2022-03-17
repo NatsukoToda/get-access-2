@@ -84,6 +84,16 @@ namespace :get_access do
         else
           if response["routes"].present?
             res_time = response["routes"][0]["legs"][0]["duration"]["text"]
+            #徒歩時間を日本語変換
+            time_text = res_time.gsub("days","日").gsub("hours","時間").gsub("mins","分")
+            #徒歩時間を分換算に
+            if res_time.include?("days")
+              time_array = res_time.gsub("days",".").gsub("hours",".").split(".").map(&:to_i)
+              change_array = [1440, 60]
+              minutes = [time_array,change_array].transpose.map{|ary| ary.inject(:*) }.inject{|x,y| x+y} 
+            else 
+              minutes = res_time.delete(" mins").split(/hour/).map(&:to_i).inject{|x,y| x*60+y}
+            end
             NurseryStation.create!(
               :nursery_no => station_group[:nursery_no],
               :nursery_name => station_group[:nursery_name],
@@ -94,8 +104,8 @@ namespace :get_access do
               :station_group_no => station_group[:station_group_no],
               :station_group_name => station_group[:station_group_name],
               :distance => station_group[:distance],
-              :walking_time_text => res_time,               
-              :walking_time => res_time.delete(" mins").split(/hour/).map(&:to_i).inject{|x,y| x*60+y},
+              :walking_time_text => time_text,               
+              :walking_time => minutes,
               :distance_rank => station_group[:distance_rank],
               :nursery_latitude => nursery.latitude,
               :nursery_longitude => nursery.longitude)
