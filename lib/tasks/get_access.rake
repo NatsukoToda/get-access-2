@@ -26,14 +26,16 @@ namespace :get_access do
       end
     end
   # ②緯緯度軽度付与
-    nurseries = Nursery.where(latitude: nil)
+    nurseries = Nursery.where(latitude: nil).where(longitude: nil)
     nurseries.each do |nursery|
       geocode = Geocoder.coordinates(nursery.address)
-      nursery.latitude = geocode[0]
-      nursery.longitude =geocode[1]
-      nursery.save!
+      unless geocode.nil?
+        nursery.latitude = geocode[0]
+        nursery.longitude =geocode[1]
+        nursery.save!
       # googleからスクレイピングと認定されない為に処理に間をあける
       sleep 2 
+      end
     end
   
    #③最寄駅取得 
