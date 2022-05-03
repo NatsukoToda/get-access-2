@@ -17,7 +17,7 @@ namespace :get_access do
   # ①最寄駅付与対象の保育園情報インポート
     # 今回最寄駅を付与したい保育園データをアップロード
     unless Nursery.exists?
-      CSV.foreach('db/nurseries_without_aceess.csv') do |row|
+      CSV.foreach('db/nurseries_without_access.csv') do |row|
         Nursery.create!(
         :nursery_no => row[0],
         :nursery_name => row[1],
@@ -26,14 +26,16 @@ namespace :get_access do
       end
     end
   # ②緯緯度軽度付与
-    nurseries = Nursery.where(latitude: nil)
+    nurseries = Nursery.where(latitude: nil).where(longitude: nil)
     nurseries.each do |nursery|
       geocode = Geocoder.coordinates(nursery.address)
-      nursery.latitude = geocode[0]
-      nursery.longitude =geocode[1]
-      nursery.save!
+      unless geocode.nil?
+        nursery.latitude = geocode[0]
+        nursery.longitude =geocode[1]
+        nursery.save!
       # googleからスクレイピングと認定されない為に処理に間をあける
       sleep 2 
+      end
     end
   
    #③最寄駅取得 
