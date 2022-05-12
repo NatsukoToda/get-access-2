@@ -10,7 +10,64 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_15_123321) do
+ActiveRecord::Schema.define(version: 2022_05_11_131329) do
+
+  create_table "address_station_for_displays", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "address", null: false, comment: "最寄駅付与対象の住所"
+    t.decimal "latitude", precision: 11, scale: 8, comment: "住所の緯度"
+    t.decimal "longitude", precision: 11, scale: 8, comment: "住所の経度"
+    t.integer "station_g_code", null: false, comment: "1.2km以内にある駅の駅.jpの駅グループコード"
+    t.integer "nearest_station_no", null: false, comment: "駅グループの中で最も近い駅の保活のミカタの駅no"
+    t.string "nearest_station_name", null: false, comment: "駅グループの中で最も近い駅の保活のミカタの駅名"
+    t.decimal "distance", precision: 11, scale: 2, comment: "駅グループの中で最も近い駅と住所間の距離（km）_geocoder"
+    t.integer "walking_time", comment: "駅グループの中で最も近い駅と住所間の徒歩時間（分）_gmap_api"
+    t.text "text_for_display", comment: "サイト表示用の最寄駅情報（駅グループの内訳がわかるもの）"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "address_stations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "address", null: false, comment: "最寄駅付与対象の住所"
+    t.decimal "latitude", precision: 11, scale: 8, comment: "住所の緯度"
+    t.decimal "longitude", precision: 11, scale: 8, comment: "住所の経度"
+    t.integer "station_no", null: false, comment: "1200m以内の距離にある駅の保活のミカタの駅no"
+    t.integer "station_code", null: false, comment: "1.2km以内にある駅の駅.jpの駅コード"
+    t.integer "station_g_code", null: false, comment: "1.2km以内にある駅の駅.jpの駅グループコード"
+    t.decimal "distance", precision: 11, scale: 2, comment: "住所と駅間の距離（km）_geocoder"
+    t.string "station_name"
+    t.string "line_company_name_omit"
+    t.integer "representive"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "addresses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "address", null: false, comment: "最寄駅付与対象の住所"
+    t.string "address_adjusted", comment: "最寄駅付与対象の住所（緯度軽度が引き当たらない場合の修正結果）"
+    t.decimal "latitude", precision: 11, scale: 8, comment: "住所の緯度"
+    t.decimal "longitude", precision: 11, scale: 8, comment: "住所の経度"
+    t.integer "got_near_stations", comment: "距離1.2km以内の駅取得が完了したら付与"
+    t.integer "got_access"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "line_companies", primary_key: "code", id: :integer, comment: "路線を運営する事業者コード", default: nil, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name", null: false, comment: "路線を運営する事業者名"
+    t.string "name_omit", null: false, comment: "事業者名の略称"
+    t.integer "close_flag", comment: "閉業フラグ"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "lines", primary_key: "code", id: :integer, comment: "路線コード", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name", null: false, comment: "路線名"
+    t.string "name_omit", null: false, comment: "路線の略称"
+    t.integer "line_company_code", comment: "路線の運営事業者コード"
+    t.integer "close_flag", comment: "閉業フラグ"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "nurseries", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "nursery_no", null: false, comment: "最寄駅付与対象の保育園no"
@@ -43,19 +100,21 @@ ActiveRecord::Schema.define(version: 2022_03_15_123321) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "stations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "stations", primary_key: "no", id: :integer, comment: "プライマリーキー", default: nil, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", null: false, comment: "駅名（沿線補足）"
-    t.string "original_name", null: false, comment: "駅名"
+    t.integer "line_company_code", null: false, comment: "事業者コード"
+    t.integer "line_code", null: false, comment: "路線コード"
     t.integer "area_no", null: false, comment: "住所_エリア"
     t.integer "prefecture_no", null: false, comment: "住所_都道府県"
     t.integer "zone_no", comment: "住所_地区（23区・23区外等）"
-    t.integer "city_no", null: false, comment: "住所_市区町村"
-    t.decimal "latitude", precision: 11, scale: 8, comment: "緯度"
-    t.decimal "longitude", precision: 11, scale: 8, comment: "経度"
-    t.integer "somusho_station_code", null: false, comment: "総務省の駅コード"
-    t.integer "somusho_station_group_code", null: false, comment: "総務省の駅グループコード"
-    t.integer "station_group_no", null: false, comment: "保活のミカタの保育園no"
-    t.string "station_group_name", null: false, comment: "保活のミカタの保育園名"
+    t.integer "city_no", null: false, comment: "住所_市区町村（大）"
+    t.integer "district_no", null: false, comment: "住所_市区町村（小）"
+    t.decimal "latitude", precision: 11, scale: 8, null: false, comment: "緯度"
+    t.decimal "longitude", precision: 11, scale: 8, null: false, comment: "経度"
+    t.integer "station_code", null: false, comment: "駅.jpの駅コード"
+    t.integer "station_g_code", null: false, comment: "駅.jpの駅グループコード"
+    t.integer "sort", null: false, comment: "駅を路線登場順に並び替えるための番号（[sort]＋[somusho_station_code]で昇順）"
+    t.integer "close_flag", comment: "閉鎖駅フラグ"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
