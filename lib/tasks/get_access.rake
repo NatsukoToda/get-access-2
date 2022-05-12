@@ -9,6 +9,7 @@ namespace :get_access do
   # ①DBを再構築（＄rake db:migrate:reset）
   # ②最寄駅付与対象の保育園情報をnurseries_without_aceess.csvの名前で保存
   # ③このrake taskを実行（＄rake get_access:get_access ）
+  
   # タスク名 => get_access
   task get_access: :environment do
    # 一時的に生成する駅・駅グループとの距離テーブルをリセット

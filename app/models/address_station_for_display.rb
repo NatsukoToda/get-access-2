@@ -1,0 +1,2 @@
+class AddressStationForDisplay < ApplicationRecord
+end
